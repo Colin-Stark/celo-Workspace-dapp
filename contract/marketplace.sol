@@ -48,7 +48,7 @@ contract Work {
     mapping (uint => string[]) internal AssignmentCompleted;
     mapping (uint => mapping(uint => string)) internal submissions;
     mapping (uint => mapping(uint => address)) internal submitterList;
-    mapping (address => bool) internal workers;
+  
     mapping (uint => Worker) internal workforce;
     mapping (uint => Assignment) internal AssignmentsToDo;
     
@@ -61,10 +61,10 @@ contract Work {
         _;
     }
 
-    modifier OnlyRegistered () {
-        require(workers[msg.sender]);
-        _;
-    }
+   
+
+
+
 
     modifier OnlyEmployer (uint _index) {
         require(msg.sender == AssignmentsToDo[_index].employer);
