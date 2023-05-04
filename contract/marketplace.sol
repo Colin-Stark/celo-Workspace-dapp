@@ -45,10 +45,9 @@ contract Work {
 
     }
     
-
     mapping (uint => mapping(uint => string)) internal submissions;
     mapping (uint => mapping(uint => address)) internal submitterList;
-  
+    mapping (address => bool) internal workers;
     mapping (uint => Worker) internal workforce;
     mapping (uint => Assignment) internal AssignmentsToDo;
     
@@ -61,14 +60,10 @@ contract Work {
         _;
     }
 
-   
-
-
-
-
- 
-    
-     
+    modifier OnlyRegistered () {
+        require(workers[msg.sender]);
+        _;
+    }
 
 
     function SetPlatFee (uint _newfee) OnlyOwner() public {
@@ -82,6 +77,10 @@ contract Work {
         uint _price
     
     ) public {
+      require(bytes(_name).length > 0, "Assignment name cannot be empty");
+    require(_price > 0, "Assignment price must be greater than zero");
+    require(bytes(_description).length > 0, "An assignment with this name already exists.");
+    require(AssignmentsToDo[Assignments].price == 0, "An assignment with this name already exists.");
         require(
             IERC20Token(cUsdTokenAddress).transferFrom(
             msg.sender,
@@ -162,13 +161,6 @@ contract Work {
 
     }
 
-    /*
-    function Inspect(uint _index) public OnlyEmployer(_index){
-        uint NOS = AssignmentsToDo[_index].SubmissionCounter;
-        for(uint i=0; i<NOS; i++) {
-           GetSubmission(_index, i);  
-        }
-    } */
     
     function getAssignmentsToDoSize() public view returns (uint) {
         return (Assignments);
@@ -197,8 +189,8 @@ contract Work {
          );
     }
 
-    function Award(uint _index) public(_index){
-    require(msg.sender == AssignmentsToDo[_index].employer
+    function Award(uint _index) public {
+      require(msg.sender == AssignmentsToDo[_index].employer);
         require(
             IERC20Token(cUsdTokenAddress).transferFrom(
             address(this),
