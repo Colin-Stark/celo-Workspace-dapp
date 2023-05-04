@@ -66,10 +66,10 @@ contract Work {
         _;
     }
 
-    modifier OnlyEmployer (uint _index) {
-        require(msg.sender == AssignmentsToDo[_index].employer);
-        _;
-    }
+
+    
+
+
 
     function SetPlatFee (uint _newfee) OnlyOwner() public {
         platfee = _newfee;
@@ -198,6 +198,7 @@ contract Work {
     }
 
     function Award(uint _index) public OnlyEmployer(_index){
+    require(msg.sender == AssignmentsToDo[_index].employer);
         require(
             IERC20Token(cUsdTokenAddress).transferFrom(
             address(this),
