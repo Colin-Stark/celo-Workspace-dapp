@@ -45,7 +45,7 @@ contract Work {
 
     }
     
-    mapping (uint => string[]) internal AssignmentCompleted;
+
     mapping (uint => mapping(uint => string)) internal submissions;
     mapping (uint => mapping(uint => address)) internal submitterList;
   
